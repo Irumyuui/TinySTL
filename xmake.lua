@@ -9,6 +9,15 @@ add_includedirs("inc")
 target("main")
     set_kind("binary")
     add_files("main.cpp")
+    set_pcxxheader("inc/Any.hpp")
+    set_pcxxheader("inc/Array.hpp")
+    set_pcxxheader("inc/BinaryHeap.hpp")
+    set_pcxxheader("inc/Concept.hpp")
+    set_pcxxheader("inc/Optional.hpp")
+    set_pcxxheader("inc/SharedPtr.hpp")
+    set_pcxxheader("inc/TypeTraits.hpp")
+    set_pcxxheader("inc/UniquePtr.hpp")
+    set_pcxxheader("inc/Utility.hpp")
 
 --
 -- If you want to known more usage about xmake, please see https://xmake.io
