@@ -32,6 +32,7 @@ public:
   constexpr void SubRef() noexcept {
     if ((-- use_ref_) == 0) {
       DestroyResource();
+      SubWRef();
     }
   }
 
