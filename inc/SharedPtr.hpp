@@ -162,7 +162,7 @@ private:
 
   template <typename T2>
   constexpr bool ConstructFromWeak(const WeakPtr<T2> &other) noexcept {
-    if (other.ref_counter_ && other.ref_counter_.TryAddRef()) {
+    if (other.ref_counter_ && other.ref_counter_->TryAddRef()) {
       CopyPtrFrom(other);
       return true;
     }
@@ -189,6 +189,8 @@ public:
 
   constexpr explicit SharedPtr(T *ptr) {
     Base::Init(ptr);
+    // If this class is derived from EnableSharedFromThis
+    // and then assign 'this' shared ptr to weak this ptr.
     if constexpr (CanEnableShared<T>) {
       ptr->weak_this_ = *this;
     }
@@ -217,11 +219,11 @@ public:
   }
 
   constexpr T& operator*() noexcept {
-    return &Base::ptr_;
+    return *Base::ptr_;
   }
 
   constexpr const T& operator*() const noexcept {
-    return &Base::ptr_;
+    return *Base::ptr_;
   }
 
   constexpr T* operator->() const noexcept {
@@ -237,7 +239,7 @@ template <typename T>
 class WeakPtr : public PtrBase<T> {
   using Base = PtrBase<T>;
 public:
-  constexpr WeakPtr() noexcept = delete;
+  constexpr WeakPtr() noexcept = default;
 
   constexpr WeakPtr(std::nullptr_t) noexcept {}
 
@@ -298,6 +300,9 @@ public:
   }
 
 private:
+  template <typename>
+  friend class SharedPtr;
+
   mutable WeakPtr<T> weak_this_;
 };
 
